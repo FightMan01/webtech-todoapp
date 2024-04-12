@@ -56,7 +56,7 @@ async def get_todos():
 @app.route('/add_todo', methods=['POST'])
 async def add_todo():
     data = await request.get_json()
-    await app.pool.execute('INSERT INTO todos (szoveg, kesz, szemely, cimkeid, userid) VALUES ($1, $2, $3, $4, $5)', data['szoveg'], data['kesz'], data['szemely'], data["cimkek"], data['userid'])
+    await app.pool.execute('INSERT INTO todos (szoveg, kesz, szemely, cimkeid, userid, date, helyszin) VALUES ($1, $2, $3, $4, $5, $6, $7)', data['szoveg'], data['kesz'], data['szemely'], data["cimkek"], data['userid'], data["date"], data["helyszin"])
     rows = await app.pool.fetch('SELECT * FROM todos WHERE userid = $1 ORDER BY kesz, szoveg', data["userid"])
     resp = await make_response({'todos': [dict(row) for row in rows]})
     resp.headers['Access-Control-Allow-Origin'] = '*'
@@ -91,7 +91,7 @@ async def edit_todo():
     for cimke in cimkek:
         if cimke not in data["cimkek"]:
             cimkek.remove(cimke)
-    await app.pool.execute('UPDATE todos SET szoveg = $1, szemely = $2, cimkeid = $3 WHERE id = $4', data['szoveg'], data['szemely'], cimkek ,int(data['id']))
+    await app.pool.execute('UPDATE todos SET szoveg = $1, szemely = $2, cimkeid = $3, date = $4, helyszin = $5 WHERE id = $6', data['szoveg'], data['szemely'], cimkek, data['date'], data["helyszin"], int(data['id']))
     rows = await app.pool.fetch('SELECT * FROM todos WHERE userid = $1 ORDER BY kesz, szoveg', data["userid"])
     resp = await make_response({'todos': [dict(row) for row in rows]})
     resp.headers['Access-Control-Allow-Origin'] = '*'
@@ -129,3 +129,6 @@ async def delete_cimke():
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True, host='0.0.0.0')
+
+
+# hypercorn --certfile /etc/letsencrypt/live/api.fightman0lbot.hu/cert.pem --keyfile /etc/letsencrypt/live/api.fightman01bot.hu/privkey.pem --bind=0.0.0.0:5849 backend.py

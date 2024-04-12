@@ -8,12 +8,13 @@ export default defineConfig({
   plugins: [
     vue(),
   ],
+  publicPath: process.env.BASE_URL,
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   },
-  base: '/webtech/',
+  base: process.env.BASE_URL,
   rollupInputOptions: {
     external: ['vue'],
   },

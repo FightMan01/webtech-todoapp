@@ -1,0 +1,393 @@
+@keyframes animateblur {
+from {opacity: 0}
+to {opacity: 1}
+}
+p::-webkit-scrollbar {
+    display: none;
+}
+td::-webkit-scrollbar {
+    display: none;
+}
+.popuptartalom::-webkit-scrollbar {
+    display: none;
+}
+.cimkediv2 {
+    border-radius: 5px;
+    height: fit-content;
+    position: relative;
+    display:inline-block;
+    width: 75%;
+    justify-self: center;
+    display: flex;
+    left: 15%;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+.cimke {
+    background-color: #3E69FF;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    height: fit-content;
+    width: fit-content;
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    font-size: 1.2em;
+}
+.gombok {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    justify-content: right;
+    padding-right: 1rem;
+    bottom: 0;
+    padding-bottom: 1rem;
+}
+.savebtn {
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 1.2em;
+}
+.cancelbtn {
+    background-color: #FF3E3E;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin-right: 0.8rem;
+}
+.popuptartalom {
+    position: absolute;
+    /* top: 10%;
+    left: 50%;
+    transform: translate(-50%, 0%); */
+    align-self: center;
+    width: 75%;
+    height: 70%;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    overflow:scroll;
+    max-height: 100%;
+}
+table {
+    align-self: center;
+    width: 40em;
+    padding-top: 1rem;
+    border-spacing: 0px 0.5rem;
+    padding-bottom: 20px;
+    max-width: 70%;
+}
+.line {
+    width: 100%;
+    height: 1px;
+    background-color: #e9ecef;
+}
+.line_table {
+    width: 100%;
+    height: 1px;
+    background-color: #e9ecef;
+    position: absolute;
+    display: flex;
+}
+.cimkediv {
+    background-color: #3D3D3D;
+    border-radius: 5px;
+    height: fit-content;
+    position: relative;
+    display:inline-block;
+    width: 75%;
+    justify-self: center;
+    display: flex;
+    left: 15%;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    min-height: 10rem;
+}
+.ujcimkeinput {
+    background-color: #828282;
+    border-radius: 5px;
+    height: 2em;
+    position: relative;
+    display:inline-block;
+    width: 10em;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+#ujcimke {
+    background-color: transparent;
+    color: white;
+    border: none;
+    height: 30px;
+    font-size: 1.2rem;
+    padding-left: 0rem;
+    padding-right: 0rem;
+    padding-top: 0rem;
+    position: relative;
+    width: 100%;
+}
+#ujcimke::placeholder {
+    color: white;
+}
+.blurbg{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(57,53,53,0.4);
+    backdrop-filter: blur(5px);
+    display: none;
+    animation-name: animateblur;
+    animation-duration: 0.5s;
+}
+.addmodal {
+    background-color: #585858;
+    z-index: 1;
+    border-radius: 15px;
+    height: 80%;
+    width: 60em;
+    top: 50%; right: 50%;
+    transform: translate(50%, -50%);
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    max-width: 80%;
+    align-items: center;
+    justify-content: center;
+}
+.modal {
+    background-color: #585858;
+    border-radius: 15px;
+    height: fit-content;
+    width: 50em;
+    /* top: 50%; right: 50%;
+    transform: translate(50%, -50%); */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: scroll;
+    max-width: 80%;
+    align-self: center;
+}
+.modal::-webkit-scrollbar {
+    display: none;
+}
+.logoutbtn {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 8px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    right: 0.2em;
+    position: absolute;
+}
+.inputdiv {
+    background-color: #2E2E2E;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    height: 3rem;
+    position: relative;
+    margin-left: 0.5rem;
+    display:inline-block;
+    width: 25em;
+    max-width: 75%;
+}
+.inputdiv-popup {
+    background-color: #2E2E2E;
+    border-radius: 5px;
+    height: 3rem;
+    position: relative;
+    display:inline-block;
+    width: 100%;
+}
+.pluszdiv {
+    background-color: #3E69FF;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    height: 3rem;
+    width: 3.5rem;
+    position: relative;
+    cursor: pointer;
+    min-width: 2.5rem;
+}
+input {
+    background-color: transparent;
+    color: white;
+    border: none;
+    width: 100%;
+    height: 3rem;
+    font-size: 1.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    position: relative;
+    
+}
+input:focus {
+    outline: none;
+}
+#plusicon {
+    top: 50%;
+    right: 50%;
+    transform: translate(45%, -50%);
+    position: absolute;
+}
+.elemhozza {
+    display: flex;
+    max-width: 80%;
+    width: 35em;
+}
+body {
+    overflow: hidden;
+}
+.showmodal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; 
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4); 
+}
+
+.showmodal-content {
+    position: relative;
+    background-color: #585858;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    max-width: 80%;
+    width: 30em;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+}
+
+@-webkit-keyframes animatetop {
+    from {top:300px; opacity:0} 
+    to {top:0; opacity:1}
+}
+
+@keyframes animatetop {
+    from {top:300px; opacity:0}
+    to {top:0; opacity:1}
+}
+
+.close {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.showmodal-header {
+    padding: 2px 16px;
+    background-color: #3E69FF;
+    color: white;
+}
+
+.showmodal-body {padding: 2px 16px;}
+
+.taboktable {
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.tabok {
+    width: 100%;
+    /* border-collapse: collapse; */
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0;
+    max-width: 100%;
+}
+
+.tabok td {
+    padding: 8px 10px;
+    text-align: center;
+    font-size: 1.2rem;
+    color: white;
+    border-bottom: 2px solid white;
+    cursor: pointer;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    width: fit-content;
+}
+
+.tabok td.selectedtab {
+    border: 2px solid white;
+    border-bottom: none;
+}
+
+.szurestab-empty {
+    width: 35rem;
+}
+
+.dp__theme_light {
+    --dp-background-color: rgb(41,41,41);
+    --dp-text-color: white;
+    --dp-hover-color: #f3f3f3;
+    --dp-hover-text-color: #212121;
+    --dp-hover-icon-color: #959595;
+    --dp-primary-color: #1976d2;
+    --dp-primary-disabled-color: #6bacea;
+    --dp-primary-text-color: #f8f5f5;
+    --dp-secondary-color: #c0c4cc;
+    --dp-border-color: transparent;
+    --dp-menu-border-color: #ddd;
+    --dp-border-color-hover: transparent;
+    --dp-disabled-color: #f6f6f6;
+    --dp-scroll-bar-background: #f3f3f3;
+    --dp-scroll-bar-color: #959595;
+    --dp-success-color: #76d275;
+    --dp-success-color-disabled: #a3d9b1;
+    --dp-icon-color: #959595;
+    --dp-danger-color: #ff6f60;
+    --dp-marker-color: #ff6f60;
+    --dp-tooltip-color: #fafafa;
+    --dp-disabled-color-text: #8e8e8e;
+    --dp-highlight-color: rgb(25 118 210 / 10%);
+    --dp-range-between-dates-background-color: var(--dp-hover-color, #f3f3f3);
+    --dp-range-between-dates-text-color: var(--dp-hover-text-color, #212121);
+    --dp-range-between-border-color: var(--dp-hover-color, #f3f3f3);
+}
+
+.oldaltartalom {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

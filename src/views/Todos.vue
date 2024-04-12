@@ -5,23 +5,39 @@
         <button class="logoutbtn" @click="logout()">Kijelentkezés</button>
         <div class="line"></div>
     </div>
+    <div class="oldaltartalom">
         <div style="width: 100%;display:flex;justify-content: center;padding-top: 2em;">
-            <div class="inputdiv"><input placeholder="Elem hozzáadása" id="eleminput" @keydown.enter="ujelem()" @input="search_in_todo_table()"></input></div><div class="pluszdiv" @click="test()"><i class="fa-solid fa-plus fa-2x" id="plusicon"></i></div>
+            <div class="inputdiv"><input placeholder="Elem hozzáadása" id="eleminput" @keydown.enter="ujelem()" @input="search_in_todo_table()"></input></div><div class="pluszdiv" @click="ujelem()"><i class="fa-solid fa-plus fa-2x" id="plusicon"></i></div>
         </div>
-    <div class="modal">
-        <table id="todotable" cellpadding="0">
-            <tr v-for="item in todos.todos" v-bind:key="item.id">
-                <td style="width: 8%;" v-if="!item.kesz"><button style="background-color: transparent;border: 0;" @click="setkesz(item.id, true)"><i class="fa-regular fa-circle-check fa-2x" style="color: black;cursor:pointer;"></i></button></td>
-                <td style="width: 8%;" v-if="item.kesz"><button style="background-color: transparent;border: 0;" @click="setkesz(item.id, false)"><i class="fa-regular fa-circle-check fa-2x" style="color: #009206;cursor:pointer;"></i></button></td>
-                <td style="font-size: 1.5em;overflow: scroll;max-width: 400px;border-bottom: 1px solid white;" v-if="!item.kesz"><p style="width: 95%;overflow: scroll;max-width: 95%;" id="todoszoveg">{{ item.szoveg }}</p></td>
-                <td style="font-size: 1.5em;overflow: scroll;max-width: 400px;border-bottom: 1px solid white;" v-if="item.kesz"><p style="width: 95%;overflow: scroll;max-width: 95%;text-decoration: line-through;" id="todoszoveg">{{ item.szoveg }}</p></td>
-                <td style="right: 0;position: relative;height: 39px;border-bottom: 1px solid white;padding-bottom: 10px;width: 15%;">
-                    <div style="display: flex; justify-content: space-evenly;width: 100%;top:31%;position:relative;">
-                        <button style="background-color: transparent;border: 0;" @click="showtodo(item.id)"><i class="fa-solid fa-eye fa-lg" style="color: white;cursor:pointer;"></i></button><button style="background-color: transparent;border: 0;" @click="edit_item(item.id)"><i class="fa-solid fa-pen fa-lg" style="color:#3E69FF;cursor:pointer;"></i></button><button @click="deleteTodo(item.id)" style="background-color: transparent;border: 0;"><i class="fa-solid fa-trash fa-lg" style="color: red;cursor:pointer;"></i></button>
-                    </div>
-                </td>
-            </tr>        
-        </table>
+        <div class="taboktable">
+            <table class="tabok">
+                <tr>
+                    <td class="szurestab-empty"></td>
+                    <td class="selectedtab" @click="selected_tab('all')" id="all_tab">Összes</td>
+                    <td class="szurestab" @click="selected_tab('done')" id="done_tab">Kész</td>
+                    <td class="szurestab" @click="selected_tab('active')" id="active_tab">Aktív</td>
+                    <td class="szurestab" @click="selected_tab('soon')" id="soon_tab">Közelgő</td>
+                    <td class="szurestab-empty"></td>
+                </tr>
+            </table>
+        </div>
+    
+        <div class="modal">
+            <table id="todotable" cellpadding="0" v-if="show_todos.todos.length > 0">
+                <tr v-for="item in show_todos.todos" v-bind:key="item.id">
+                    <td style="width: 8%;" v-if="!item.kesz"><button style="background-color: transparent;border: 0;" @click="setkesz(item.id, true)"><i class="fa-regular fa-circle-check fa-2x" style="color: black;cursor:pointer;"></i></button></td>
+                    <td style="width: 8%;" v-if="item.kesz"><button style="background-color: transparent;border: 0;" @click="setkesz(item.id, false)"><i class="fa-regular fa-circle-check fa-2x" style="color: #009206;cursor:pointer;"></i></button></td>
+                    <td style="font-size: 1.5em;overflow: scroll;max-width: 400px;border-bottom: 1px solid white;" v-if="!item.kesz"><p style="width: 95%;overflow: scroll;max-width: 95%;" id="todoszoveg">{{ item.szoveg }}</p></td>
+                    <td style="font-size: 1.5em;overflow: scroll;max-width: 400px;border-bottom: 1px solid white;" v-if="item.kesz"><p style="width: 95%;overflow: scroll;max-width: 95%;text-decoration: line-through;" id="todoszoveg">{{ item.szoveg }}</p></td>
+                    <td style="right: 0;position: relative;height: 39px;border-bottom: 1px solid white;padding-bottom: 10px;width: 15%;">
+                        <div style="display: flex; justify-content: space-evenly;width: 100%;top:31%;position:relative;">
+                            <button style="background-color: transparent;border: 0;" @click="showtodo(item.id)"><i class="fa-solid fa-eye fa-lg" style="color: white;cursor:pointer;"></i></button><button style="background-color: transparent;border: 0;" @click="edit_item(item.id)"><i class="fa-solid fa-pen fa-lg" style="color:#3E69FF;cursor:pointer;"></i></button><button @click="deleteTodo(item.id)" style="background-color: transparent;border: 0;"><i class="fa-solid fa-trash fa-lg" style="color: red;cursor:pointer;"></i></button>
+                        </div>
+                    </td>
+                </tr>        
+            </table>
+            <h2 style="color: white;align-self: center;" v-if="show_todos.todos.length == 0">Nincs feljegyzés!</h2>
+        </div>
     </div>
     <div class="blurbg">
         <div class="addmodal">
@@ -47,7 +63,15 @@
                 <div style="padding-top: 1rem;align-self: center;width: 90%;">
                     <h3>Személy</h3>
                     <div class="inputdiv-popup"><input id="szemelyinput"></input></div>
-                </div>      
+                </div>
+                <div style="padding-top: 1rem;align-self: center;width: 90%;">
+                    <h3>Időpont</h3>
+                    <VueDatePicker v-model="date" :format="datumforma" :enable-time-picker="false" :min-date="new Date()"/>
+                </div>
+                <div style="padding-top: 1rem;align-self: center;width: 90%;">
+                    <h3>Helyszín</h3>
+                    <div class="inputdiv-popup"><input id="helyszininput"></input></div>
+                </div>
             </div>
             <div class="gombok">
                 <button @click="closemodal()" class="cancelbtn">Mégse</button><button class="savebtn" @click="saveTodo()">Mentés</button>
@@ -61,11 +85,17 @@
           <span class="close" @click="closeshowmodal()">&times;</span>
           <h2 id="showmodalszoveg"></h2>
         </div>
-        <div class="modal-body" style="flex-wrap: wrap;display:flex;">
-          <i class="fa-solid fa-person fa-2x" style="margin-top: 0.5rem;margin-left: 0.5rem;"></i><p id="showmodalszemely" style="margin-left: 1rem;font-size: 1.5rem;"></p>
+        <div class="modal-body" style="flex-wrap: wrap;display:flex;margin-top: 0.5rem;" id="showszemely">
+          <i class="fa-solid fa-person fa-2x" style="margin-left: 0.5rem;"></i><p id="showmodalszemely" style="margin-left: 1rem;font-size: 1.5rem;margin-top: -0.2rem;"></p>
         </div>
         <div class="modal-cimke" style="display: flex;flex-wrap: wrap;" v-if="cimkek.length > 0">
           <i class="fa-solid fa-tag fa-2x" style="margin-top: 0.5rem;margin-left: 0.5rem;"></i><div class="cimke" :style="{ 'background-color': cimke.color, 'color' : get_contrast(cimke.color) }" style="margin-top: 0.5rem;margin-left: 0.5rem;position: relative;margin-bottom: 0.5rem;cursor: default;" v-for="cimke in cimkek" v-if="showmodal">{{ cimke.nev }}</div>
+        </div>
+        <div class="modal-body" style="display: flex;flex-wrap: wrap;" id="showdatum">
+          <i class="fa-solid fa-calendar-days fa-2x" style="margin-left: 0.5rem;"></i><p style="margin-left: 1rem;font-size: 1.5rem;margin-top: -0.2rem;" id="showmodaldatum"></p>
+        </div>
+        <div class="modal-body" style="flex-wrap: wrap;display:flex;margin-top: 0.2rem;" id="showhelyszin">
+          <i class="fa-solid fa-location-dot fa-2x" style="margin-left: 0.5rem;"></i><p id="showmodalhelyszin" style="margin-left: 1rem;font-size: 1.5rem;margin-top: -0.2rem;"></p>
         </div>
       </div>
     
@@ -74,598 +104,407 @@
 </template>
 
 <script>
-    export default {
-      name: "Todos",
-      data() {
-        return {
-          todos: [],
-          cimkek: [],
-          apicimkek: [],
-          showmodal: false
+import { faDice } from '@fortawesome/free-solid-svg-icons';
+
+  export default {
+    name: "Todos",
+    data() {
+      return {
+        todos: [],
+        cimkek: [],
+        apicimkek: [],
+        showmodal: false,
+        show_todos: [],
+        current_show: "all",
+        date: null
+      }
+    },
+    created() {
+      if (!localStorage.getItem("userid")) {
+          this.$router.push("/");
+      }
+      this.$watch(
+        () => this.$route.params.id,
+        this.fetchData,
+        { immediate: true }
+      )
+    },
+    methods: {
+      kozelgofilter(date) {
+        if (date == null || date.length == 0) {
+          return false
+        }
+        const datum = new Date();
+        datum.setDate(datum.getDate() + 7);
+        return this.dateparser(date) <= datum
+      },
+      dateparser(date) {
+        let elemek = date.split(".");
+        let ev = parseInt(elemek[0], 10);
+        let honap = parseInt(elemek[1], 10) - 1;
+        let nap = parseInt(elemek[2], 10);
+        let datum = new Date(ev, honap, nap)
+        return datum
+      },
+      datumforma(date) {
+        let ev, honap, nap
+        if (date == null) {
+          return null
+        }
+        if (typeof(date) === "string") {
+          let elemek = date.split(".");
+          ev = parseInt(elemek[0], 10);
+          honap = parseInt(elemek[1], 10) - 1;
+          nap = parseInt(elemek[2], 10);
+        } else {
+          ev = date.getFullYear();
+          honap = date.getMonth() + 1;
+          nap = date.getDate();
+        }
+        if (honap <= 9) {
+          honap = "0"+honap
+        }
+        if (nap <= 9) {
+          nap = "0"+nap
+        }
+        return `${ev}.${honap}.${nap}.`;
+      },
+      update_show_todos(){
+        if (this.current_show == "all") {
+          this.show_todos.todos = this.todos.todos.slice()
+        }
+        if (this.current_show == "done") {
+          this.show_todos.todos =this.todos.todos.slice().filter(item => item.kesz)
+        }
+        if (this.current_show == "active") {
+          this.show_todos.todos = this.todos.todos.slice().filter(item => !item.kesz)
+        }
+        if (this.current_show == "soon") {
+          this.show_todos.todos = this.todos.todos.slice().filter(item => this.kozelgofilter(item.date))
         }
       },
-      created() {
-        if (!localStorage.getItem("userid")) {
-            this.$router.push("/");
+      selected_tab(tab) {
+        let all_tab = document.querySelector("#all_tab");
+        let active_tab = document.querySelector("#active_tab");
+        let done_tab = document.querySelector("#done_tab");
+        let soon_tab = document.querySelector("#soon_tab");
+        if (tab=="all") {
+          all_tab.classList.add("selectedtab");
+          active_tab.classList.remove("selectedtab");
+          done_tab.classList.remove("selectedtab");
+          soon_tab.classList.remove("selectedtab");
+          this.current_show = "all"
+          this.update_show_todos()
         }
-        this.$watch(
-          () => this.$route.params.id,
-          this.fetchData,
-          { immediate: true }
-        )
+        if (tab=="done") {
+          done_tab.classList.add("selectedtab");
+          active_tab.classList.remove("selectedtab");
+          all_tab.classList.remove("selectedtab");
+          soon_tab.classList.remove("selectedtab");
+          this.current_show = "done"
+          this.update_show_todos()
+        }
+        if (tab=="active") {
+          active_tab.classList.add("selectedtab");
+          all_tab.classList.remove("selectedtab");
+          done_tab.classList.remove("selectedtab");
+          soon_tab.classList.remove("selectedtab");
+          this.current_show = "active"
+          this.update_show_todos()
+        }
+        if (tab == "soon") {
+          soon_tab.classList.add("selectedtab");
+          all_tab.classList.remove("selectedtab");
+          done_tab.classList.remove("selectedtab");
+          active_tab.classList.remove("selectedtab");
+          this.current_show = "soon"
+          this.update_show_todos()
+        }
       },
-      methods: {
-        delete_cimke(cimkeid) {
-          fetch("https://api.fightman01bot.hu:5849/delete_cimke", {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                  id: cimkeid,
-                  userid: localStorage.getItem("userid")
-              })
-          })
-          .then(response => response.json())
-          .then(data => {
-              this.apicimkek = data
-              this.cimkek = this.cimkek.filter(item => item !== cimkeid);
-          })
+      delete_cimke(cimkeid) {
+        fetch("https://api.fightman01bot.hu:5849/delete_cimke", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                id: cimkeid,
+                userid: localStorage.getItem("userid")
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            this.apicimkek = data
+            this.cimkek = this.cimkek.filter(item => item !== cimkeid);
+        })
+      },
+      get_contrast(hexcolor) {
+        if (!hexcolor.includes("#")) {
+          return "white";
+        }
+        var r = parseInt(hexcolor.substring(1,3),16);
+        var g = parseInt(hexcolor.substring(3,5),16);
+        var b = parseInt(hexcolor.substring(5,7),16);
+        var yiq = ((r*299)+(g*587)+(b*114))/1000;
+        return (yiq >= 128) ? 'black' : 'white';
+      },
+      get_contrast_by_id(cimke_id) {
+        var hexcolor = this.apicimkek.cimkek.filter(item => item.id == cimke_id)[0].color;
+        if (!hexcolor.includes("#")) {
+          return "white";
+        }
+        var r = parseInt(hexcolor.substring(1,3),16);
+        var g = parseInt(hexcolor.substring(3,5),16);
+        var b = parseInt(hexcolor.substring(5,7),16);
+        var yiq = ((r*299)+(g*587)+(b*114))/1000;
+        return (yiq >= 128) ? 'black' : 'white';
+      },
+      save_cimke() {
+        fetch("https://api.fightman01bot.hu:5849/add_cimke", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nev: document.getElementById("ujcimke").value,
+                userid: localStorage.getItem("userid")
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            this.apicimkek = data
+            document.getElementById("ujcimke").value = ""
+        });
         },
-        get_contrast(hexcolor) {
-          if (!hexcolor.includes("#")) {
-            return "white";
-          }
-          var r = parseInt(hexcolor.substring(1,3),16);
-          var g = parseInt(hexcolor.substring(3,5),16);
-          var b = parseInt(hexcolor.substring(5,7),16);
-          var yiq = ((r*299)+(g*587)+(b*114))/1000;
-          return (yiq >= 128) ? 'black' : 'white';
-        },
-        get_contrast_by_id(cimke_id) {
-          var hexcolor = this.apicimkek.cimkek.filter(item => item.id == cimke_id)[0].color;
-          if (!hexcolor.includes("#")) {
-            return "white";
-          }
-          var r = parseInt(hexcolor.substring(1,3),16);
-          var g = parseInt(hexcolor.substring(3,5),16);
-          var b = parseInt(hexcolor.substring(5,7),16);
-          var yiq = ((r*299)+(g*587)+(b*114))/1000;
-          return (yiq >= 128) ? 'black' : 'white';
-        },
-        save_cimke() {
-          fetch("https://api.fightman01bot.hu:5849/add_cimke", {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json"
-              },
-              body: JSON.stringify({
-                  nev: document.getElementById("ujcimke").value,
-                  userid: localStorage.getItem("userid")
-              })
-          })
-          .then(response => response.json())
-          .then(data => {
-              this.apicimkek = data
-              document.getElementById("ujcimke").value = ""
-          });
-          },
-        search_in_todo_table() {
-          let input, szovegek, filter;
-          input = document.getElementById("eleminput");
-          filter = input.value.toUpperCase();
-          if (filter === "") {
-            szovegek = document.querySelectorAll("#todoszoveg");
-            for (let i = 0; i < szovegek.length; i++) {
-              szovegek[i].parentElement.parentElement.style.display = "";
-            }
-            return;
-          }
+      search_in_todo_table() {
+        let input, szovegek, filter;
+        input = document.getElementById("eleminput");
+        filter = input.value.toUpperCase();
+        if (filter === "") {
           szovegek = document.querySelectorAll("#todoszoveg");
           for (let i = 0; i < szovegek.length; i++) {
-            if (szovegek[i].innerText.toUpperCase().indexOf(filter) > -1) {
-              szovegek[i].parentElement.parentElement.style.display = "";
-            } else {
-              szovegek[i].parentElement.parentElement.style.display = "none";
-            }
+            szovegek[i].parentElement.parentElement.style.display = "";
           }
-        },
-        add_cimke(cimkenev) {
-          if (!this.cimkek.includes(cimkenev)) {
-            this.cimkek.push(cimkenev);
-          } else {
-            this.cimkek.splice(this.cimkek.indexOf(cimkenev), 1);
-          }
-        },
-        showtodo(todoID) {
-          this.showmodal = true;
-          let modal = document.querySelector('.showmodal');
-          let todo = this.todos.todos.find(todo => todo.id === todoID);
-          this.cimkek = this.apicimkek.cimkek.filter(cimke => todo.cimkeid.includes(cimke.id));
-          document.querySelector('#showmodalszoveg').innerText = todo.szoveg;
-          document.querySelector('#showmodalszemely').innerText = todo.szemely;
-          if (todo.kesz) {
-            document.querySelector('.showmodal-header').style.backgroundColor = 'green';
-          } else {
-            document.querySelector('.showmodal-header').style.backgroundColor = '#3E69FF';
-          }
-          modal.style.display = 'block';
-        },
-        closeshowmodal() {
-          let modal = document.querySelector('.showmodal');
-          this.cimkek = [];
-          modal.style.display = 'none';
-          this.showmodal = false;
-        },
-        fetchData() {
-          fetch("https://api.fightman01bot.hu:5849/get_todos?userid=" + localStorage.getItem("userid"), {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json"
-            }
-          })
-            .then(response => response.json())
-            .then(data => {
-              this.todos = data;
-            });
-          fetch("https://api.fightman01bot.hu:5849/get_cimkek?userid=" + localStorage.getItem("userid"), {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json"
-            }
-          })
-            .then(response => response.json())
-            .then(data => {
-              this.apicimkek = data;
-            });
-          },
-        ujelem() {
-            document.querySelector('.blurbg').style.display = 'flex';
-            document.querySelector('#megnevezesinput').value = document.querySelector('#eleminput').value
-            document.querySelector('#megnevezesinput').focus()
-        },
-        closemodal: function closemodal() {
-            document.querySelector('.blurbg').style.display = 'none';
-            this.cimkek = [];
-            document.querySelector('#eleminput').value = '';
-            document.querySelector('#megnevezesinput').value = '';
-            document.querySelector('#szemelyinput').value = '';
-            document.querySelector('.savebtn').id = '';
-            let szovegek = document.querySelectorAll("#todoszoveg");
-            for (let i = 0; i < szovegek.length; i++) {
-              szovegek[i].parentElement.parentElement.style.display = "";
-            }
-        },
-        saveTodo() {
-          let savebtn = document.querySelector('.savebtn');
-          if (!savebtn.id) {
-            fetch("https://api.fightman01bot.hu:5849/add_todo", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    szoveg: document.querySelector('#megnevezesinput').value,
-                    cimkek: this.cimkek,
-                    szemely: document.querySelector('#szemelyinput').value,
-                    kesz: false,
-                    userid: localStorage.getItem("userid")
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                this.todos = data;
-                this.cimkek = [];
-                document.querySelector('.blurbg').style.display = 'none';
-                document.querySelector('#eleminput').value = '';
-                document.querySelector('#eleminput').value = '';
-                document.querySelector('#megnevezesinput').value = '';
-                document.querySelector('#szemelyinput').value = '';
-                let szovegek = document.querySelectorAll("#todoszoveg");
-                for (let i = 0; i < szovegek.length; i++) {
-                  szovegek[i].parentElement.parentElement.style.display = "";
-                }
-            });
-          } else {
-            fetch("https://api.fightman01bot.hu:5849/edit_todo", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    id: savebtn.id,
-                    szoveg: document.querySelector('#megnevezesinput').value,
-                    cimkek: this.cimkek,
-                    szemely: document.querySelector('#szemelyinput').value,
-                    kesz: false,
-                    userid: localStorage.getItem("userid")
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                this.todos = data;
-                this.cimkek = [];
-                document.querySelector('.blurbg').style.display = 'none';
-                document.querySelector('.savebtn').id = '';
-                document.querySelector('#eleminput').value = '';
-                document.querySelector('#megnevezesinput').value = '';
-                document.querySelector('#szemelyinput').value = '';
-                let szovegek = document.querySelectorAll("#todoszoveg");
-                for (let i = 0; i < szovegek.length; i++) {
-                  szovegek[i].parentElement.parentElement.style.display = "";
-                }
-            });
-          }
-
-        },
-        deleteTodo(todoID) {
-            fetch("https://api.fightman01bot.hu:5849/delete_todo", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    id: todoID,
-                    userid: localStorage.getItem("userid")
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                this.todos = data;
-            });
-        },
-        setkesz(todoID, allapot) {
-            fetch("https://api.fightman01bot.hu:5849/set_kesz", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    id: todoID,
-                    kesz: allapot,
-                    userid: localStorage.getItem("userid")
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                this.todos = data;
-            });
-        },
-        logout() {
-            localStorage.removeItem("userid");
-            this.$router.push("/");
-        },
-        edit_item(todoID) {
-          document.querySelector('.blurbg').style.display = 'flex';
-          document.querySelector('#megnevezesinput').value = this.todos.todos.find(x => x.id === todoID).szoveg
-          document.querySelector('#megnevezesinput').focus()
-          document.getElementById('szemelyinput').value = this.todos.todos.find(x => x.id === todoID).szemely
-          document.querySelector('.savebtn').id = todoID
-          this.cimkek = this.todos.todos.find(x => x.id === todoID).cimkeid
+          return;
         }
+        szovegek = document.querySelectorAll("#todoszoveg");
+        for (let i = 0; i < szovegek.length; i++) {
+          if (szovegek[i].innerText.toUpperCase().indexOf(filter) > -1) {
+            szovegek[i].parentElement.parentElement.style.display = "";
+          } else {
+            szovegek[i].parentElement.parentElement.style.display = "none";
+          }
+        }
+      },
+      add_cimke(cimkenev) {
+        if (!this.cimkek.includes(cimkenev)) {
+          this.cimkek.push(cimkenev);
+        } else {
+          this.cimkek.splice(this.cimkek.indexOf(cimkenev), 1);
+        }
+      },
+      showtodo(todoID) {
+        this.showmodal = true;
+        let modal = document.querySelector('.showmodal');
+        let todo = this.todos.todos.find(todo => todo.id === todoID);
+        this.cimkek = this.apicimkek.cimkek.filter(cimke => todo.cimkeid.includes(cimke.id));
+        document.querySelector('#showmodalszoveg').innerText = todo.szoveg;
+        document.querySelector('#showmodalszemely').innerText = todo.szemely;
+        document.querySelector('#showmodalhelyszin').innerText = todo.helyszin;
+        document.querySelector('#showmodaldatum').innerText = todo.date;
+        document.querySelector('#showhelyszin').style.display = "flex"
+        document.querySelector('#showszemely').style.display = "flex"
+        document.querySelector('#showdatum').style.display = "flex"
+        if (todo.helyszin == null || todo.helyszin.length == 0) {
+          document.querySelector('#showhelyszin').style.display = "none"
+        }
+        if (todo.szemely == null || todo.szemely.length == 0) {
+          document.querySelector('#showszemely').style.display = "none"
+        }
+        if (!todo.date) {
+          document.querySelector('#showdatum').style.display = "none"
+        }
+        if (todo.kesz) {
+          document.querySelector('.showmodal-header').style.backgroundColor = 'green';
+        } else {
+          document.querySelector('.showmodal-header').style.backgroundColor = '#3E69FF';
+        }
+        modal.style.display = 'block';
+        this.date = this.datumforma(todo.date)
+      },
+      closeshowmodal() {
+        let modal = document.querySelector('.showmodal');
+        this.cimkek = [];
+        modal.style.display = 'none';
+        this.showmodal = false;
+        this.date = null
+      },
+      fetchData() {
+        fetch("https://api.fightman01bot.hu:5849/get_todos?userid=" + localStorage.getItem("userid"), {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+          .then(response => response.json())
+          .then(data => {
+            this.todos = data;
+            this.update_show_todos()
+          });
+        fetch("https://api.fightman01bot.hu:5849/get_cimkek?userid=" + localStorage.getItem("userid"), {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+          .then(response => response.json())
+          .then(data => {
+            this.apicimkek = data;
+          });
+        },
+      ujelem() {
+          document.querySelector('.blurbg').style.display = 'flex';
+          document.querySelector('#megnevezesinput').value = document.querySelector('#eleminput').value
+          document.querySelector('#megnevezesinput').focus()
+          this.date = null
+      },
+      closemodal() {
+          document.querySelector('.blurbg').style.display = 'none';
+          this.cimkek = [];
+          document.querySelector('#eleminput').value = '';
+          document.querySelector('#megnevezesinput').value = '';
+          document.querySelector('#szemelyinput').value = '';
+          document.querySelector('.savebtn').id = '';
+          let szovegek = document.querySelectorAll("#todoszoveg");
+          for (let i = 0; i < szovegek.length; i++) {
+            szovegek[i].parentElement.parentElement.style.display = "";
+          }
+      },
+      saveTodo() {
+        let savebtn = document.querySelector('.savebtn');
+        if (!savebtn.id) {
+          fetch("https://api.fightman01bot.hu:5849/add_todo", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                  szoveg: document.querySelector('#megnevezesinput').value,
+                  cimkek: this.cimkek,
+                  szemely: document.querySelector('#szemelyinput').value,
+                  kesz: false,
+                  userid: localStorage.getItem("userid"),
+                  date: this.datumforma(this.date),
+                  helyszin: document.querySelector('#helyszininput').value,
+              })
+          })
+          .then(response => response.json())
+          .then(data => {
+              this.todos = data;
+              this.update_show_todos()
+              this.cimkek = [];
+              document.querySelector('.blurbg').style.display = 'none';
+              document.querySelector('#eleminput').value = '';
+              document.querySelector('#eleminput').value = '';
+              document.querySelector('#megnevezesinput').value = '';
+              document.querySelector('#szemelyinput').value = '';
+              let szovegek = document.querySelectorAll("#todoszoveg");
+              for (let i = 0; i < szovegek.length; i++) {
+                szovegek[i].parentElement.parentElement.style.display = "";
+              }
+          });
+        } else {
+          fetch("https://api.fightman01bot.hu:5849/edit_todo", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                  id: savebtn.id,
+                  szoveg: document.querySelector('#megnevezesinput').value,
+                  cimkek: this.cimkek,
+                  szemely: document.querySelector('#szemelyinput').value,
+                  kesz: false,
+                  userid: localStorage.getItem("userid"),
+                  date: this.datumforma(this.date),
+                  helyszin: document.querySelector('#helyszininput').value,
+              })
+          })
+          .then(response => response.json())
+          .then(data => {
+              this.todos = data;
+              this.update_show_todos()
+              this.cimkek = [];
+              document.querySelector('.blurbg').style.display = 'none';
+              document.querySelector('.savebtn').id = '';
+              document.querySelector('#eleminput').value = '';
+              document.querySelector('#megnevezesinput').value = '';
+              document.querySelector('#szemelyinput').value = '';
+              let szovegek = document.querySelectorAll("#todoszoveg");
+              for (let i = 0; i < szovegek.length; i++) {
+                szovegek[i].parentElement.parentElement.style.display = "";
+              }
+          });
+        }
+  
+      },
+      deleteTodo(todoID) {
+          fetch("https://api.fightman01bot.hu:5849/delete_todo", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                  id: todoID,
+                  userid: localStorage.getItem("userid")
+              })
+          })
+          .then(response => response.json())
+          .then(data => {
+              this.todos = data;
+              this.update_show_todos()
+          });
+      },
+      setkesz(todoID, allapot) {
+          fetch("https://api.fightman01bot.hu:5849/set_kesz", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json"
+              },
+              body: JSON.stringify({
+                  id: todoID,
+                  kesz: allapot,
+                  userid: localStorage.getItem("userid")
+              })
+          })
+          .then(response => response.json())
+          .then(data => {
+              this.todos = data;
+              this.update_show_todos()
+          });
+      },
+      logout() {
+          localStorage.removeItem("userid");
+          this.$router.push("/");
+      },
+      edit_item(todoID) {
+        document.querySelector('.blurbg').style.display = 'flex';
+        document.querySelector('#megnevezesinput').value = this.todos.todos.find(x => x.id === todoID).szoveg
+        document.querySelector('#helyszininput').value = this.todos.todos.find(x => x.id === todoID).helyszin
+        document.querySelector('#megnevezesinput').focus()
+        document.getElementById('szemelyinput').value = this.todos.todos.find(x => x.id === todoID).szemely
+        document.querySelector('.savebtn').id = todoID
+        if (this.todos.todos.find(x => x.id === todoID).date) {
+          this.date = this.dateparser(this.todos.todos.find(x => x.id === todoID).date)
+        } else {
+          this.date = null;
+        }
+        this.cimkek = this.todos.todos.find(x => x.id === todoID).cimkeid
       }
     }
+  }
 
 </script>
-
 <style scoped>
-    @keyframes animateblur {
-    from {opacity: 0}
-    to {opacity: 1}
-    }
-    p::-webkit-scrollbar {
-        display: none;
-    }
-    td::-webkit-scrollbar {
-        display: none;
-    }
-    .popuptartalom::-webkit-scrollbar {
-        display: none;
-    }
-    .cimkediv2 {
-        border-radius: 5px;
-        height: fit-content;
-        position: relative;
-        display:inline-block;
-        width: 75%;
-        justify-self: center;
-        display: flex;
-        left: 15%;
-        flex-wrap: wrap;
-        align-content: flex-start;
-    }
-    .cimke {
-        background-color: #3E69FF;
-        color: white;
-        border-radius: 5px;
-        cursor: pointer;
-        height: fit-content;
-        width: fit-content;
-        padding-left: 0.8rem;
-        padding-right: 0.8rem;
-        margin-top: 0.5rem;
-        margin-left: 0.5rem;
-        font-size: 1.2em;
-    }
-    .gombok {
-        position: absolute;
-        display: flex;
-        width: 100%;
-        justify-content: right;
-        padding-right: 1rem;
-        bottom: 0;
-        padding-bottom: 1rem;
-    }
-    .savebtn {
-        background-color: green;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-        font-size: 1.2em;
-    }
-    .cancelbtn {
-        background-color: #FF3E3E;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-        font-size: 1.2em;
-        margin-right: 0.8rem;
-    }
-    .popuptartalom {
-        position: absolute;
-        /* top: 10%;
-        left: 50%;
-        transform: translate(-50%, 0%); */
-        align-self: center;
-        width: 75%;
-        height: 70%;
-        border-radius: 15px;
-        display: flex;
-        flex-direction: column;
-        overflow:scroll;
-        max-height: 100%;
-    }
-    table {
-        align-self: center;
-        width: 40em;
-        padding-top: 1rem;
-        border-spacing: 0px 0.5rem;
-        padding-bottom: 20px;
-        max-width: 70%;
-    }
-    .line {
-        width: 100%;
-        height: 1px;
-        background-color: #e9ecef;
-    }
-    .line_table {
-        width: 100%;
-        height: 1px;
-        background-color: #e9ecef;
-        position: absolute;
-        display: flex;
-    }
-    .cimkediv {
-        background-color: #3D3D3D;
-        border-radius: 5px;
-        height: fit-content;
-        position: relative;
-        display:inline-block;
-        width: 75%;
-        justify-self: center;
-        display: flex;
-        left: 15%;
-        flex-wrap: wrap;
-        align-content: flex-start;
-        min-height: 10rem;
-    }
-    .ujcimkeinput {
-        background-color: #828282;
-        border-radius: 5px;
-        height: 2em;
-        position: relative;
-        display:inline-block;
-        width: 10em;
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-        margin-top: 0.5rem;
-        margin-left: 0.5rem;
-    }
-    #ujcimke {
-        background-color: transparent;
-        color: white;
-        border: none;
-        height: 30px;
-        font-size: 1.2rem;
-        padding-left: 0rem;
-        padding-right: 0rem;
-        padding-top: 0rem;
-        position: relative;
-        width: 100%;
-    }
-    #ujcimke::placeholder {
-        color: white;
-    }
-    .blurbg{
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 0;
-        width: 100vw;
-        height: 100vh;
-        background-color: rgba(57,53,53,0.4);
-        backdrop-filter: blur(5px);
-        display: none;
-        animation-name: animateblur;
-        animation-duration: 0.5s;
-    }
-    .addmodal {
-        background-color: #585858;
-        z-index: 1;
-        border-radius: 15px;
-        height: 70%;
-        width: 60em;
-        top: 50%; right: 50%;
-        transform: translate(50%, -50%);
-        display: flex;
-        flex-direction: row;
-        position: absolute;
-        max-width: 80%;
-        align-items: center;
-        justify-content: center;
-    }
-    .modal {
-        background-color: #585858;
-        border-radius: 15px;
-        height: fit-content;
-        width: 50em;
-        top: 50%; right: 50%;
-        transform: translate(50%, -50%);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        position: absolute;
-        overflow: scroll;
-        max-width: 80%;
-    }
-    .modal::-webkit-scrollbar {
-        display: none;
-    }
-    .logoutbtn {
-        background-color: red;
-        color: white;
-        border: none;
-        padding: 8px 10px;
-        text-align: center;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 16px;
-        margin: 4px 2px;
-        cursor: pointer;
-        border-radius: 5px;
-        right: 0.2em;
-        position: absolute;
-    }
-    .inputdiv {
-        background-color: #2E2E2E;
-        border-top-left-radius: 5px;
-        border-bottom-left-radius: 5px;
-        height: 3rem;
-        position: relative;
-        margin-left: 0.5rem;
-        display:inline-block;
-        width: 25em;
-        max-width: 75%;
-    }
-    .inputdiv-popup {
-        background-color: #2E2E2E;
-        border-radius: 5px;
-        height: 3rem;
-        position: relative;
-        display:inline-block;
-        width: 100%;
-    }
-    .pluszdiv {
-        background-color: #3E69FF;
-        border-top-right-radius: 20px;
-        border-bottom-right-radius: 20px;
-        height: 3rem;
-        width: 3.5rem;
-        position: relative;
-        cursor: pointer;
-        min-width: 2.5rem;
-    }
-    input {
-        background-color: transparent;
-        color: white;
-        border: none;
-        width: 100%;
-        height: 3rem;
-        font-size: 1.5rem;
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-        position: relative;
-        
-    }
-    input:focus {
-        outline: none;
-    }
-    #plusicon {
-        top: 50%;
-        right: 50%;
-        transform: translate(45%, -50%);
-        position: absolute;
-    }
-    .elemhozza {
-        display: flex;
-        max-width: 80%;
-        width: 35em;
-    }
-    body {
-        overflow: hidden;
-    }
-    .showmodal {
-      display: none;
-      position: fixed;
-      z-index: 1;
-      padding-top: 100px;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto; 
-      background-color: rgb(0,0,0);
-      background-color: rgba(0,0,0,0.4); 
-    }
-    
-    .showmodal-content {
-      position: relative;
-      background-color: #585858;
-      margin: auto;
-      padding: 0;
-      border: 1px solid #888;
-      max-width: 80%;
-      width: 30em;
-      box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-      -webkit-animation-name: animatetop;
-      -webkit-animation-duration: 0.4s;
-      animation-name: animatetop;
-      animation-duration: 0.4s;
-    }
-    
-    @-webkit-keyframes animatetop {
-      from {top:300px; opacity:0} 
-      to {top:0; opacity:1}
-    }
-    
-    @keyframes animatetop {
-      from {top:300px; opacity:0}
-      to {top:0; opacity:1}
-    }
-    
-    .close {
-      color: white;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    
-    .close:hover,
-    .close:focus {
-      color: #000;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    
-    .showmodal-header {
-      padding: 2px 16px;
-      background-color: #3E69FF;
-      color: white;
-    }
-    
-    .showmodal-body {padding: 2px 16px;}
+    @import '../assets/todos.css';
 </style>
