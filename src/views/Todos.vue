@@ -17,13 +17,14 @@
                     <td class="szurestab" @click="selected_tab('done')" id="done_tab">Kész</td>
                     <td class="szurestab" @click="selected_tab('active')" id="active_tab">Aktív</td>
                     <td class="szurestab" @click="selected_tab('soon')" id="soon_tab">Közelgő</td>
+                    <td class="szurestab" @click="selected_tab('cimke')" id="cimke_tab">Címke alapján</td>
                     <td class="szurestab-empty"></td>
                 </tr>
             </table>
         </div>
     
         <div class="modal">
-            <table id="todotable" cellpadding="0" v-if="show_todos.todos.length > 0">
+            <table id="todotable" cellpadding="0" v-if="show_todos.todos.length > 0 && !shownincstalalat">
                 <tr v-for="item in show_todos.todos" v-bind:key="item.id">
                     <td style="width: 8%;" v-if="!item.kesz"><button style="background-color: transparent;border: 0;" @click="setkesz(item.id, true)"><i class="fa-regular fa-circle-check fa-2x" style="color: black;cursor:pointer;"></i></button></td>
                     <td style="width: 8%;" v-if="item.kesz"><button style="background-color: transparent;border: 0;" @click="setkesz(item.id, false)"><i class="fa-regular fa-circle-check fa-2x" style="color: #009206;cursor:pointer;"></i></button></td>
@@ -36,7 +37,7 @@
                     </td>
                 </tr>        
             </table>
-            <h2 style="color: white;align-self: center;" v-if="show_todos.todos.length == 0">Nincs feljegyzés!</h2>
+            <h2 style="color: white;align-self: center;" v-if="show_todos.todos.length == 0 || shownincstalalat">Nincs feljegyzés!</h2>
         </div>
     </div>
     <div class="blurbg">
@@ -78,6 +79,28 @@
             </div>
         </div>
     </div>
+    <div class="blurbg_cimke">
+    <div class="addmodal_cimke">
+        <div style="align-self: flex-start;z-index: 1;padding-top: 1rem;"><h1>Címke kiválasztása</h1></div>
+        <div class="popuptartalom">
+            <div style="padding-top: 1rem;align-self: center;width: 90%;">
+                <h3 style="position: relative;">Címkék</h3>
+                <div class="cimkediv">
+                    <div class="cimke" :class="cimkek.includes(cimke.id) ? 'selected_cimke' : ''" :style="{ 'background-color': cimke.color, 'color' : get_contrast(cimke.color) }" @click="add_filter_cimke(cimke.id)" v-for="cimke in apicimkek.cimkek">{{ cimke.nev }}</div>
+                    <!-- <div class="cimke" style="background-color: orange;" @click="add_cimke('Címke 2')">Címke2</div>
+                    <div class="cimke" style="background-color: green;" @click="add_cimke('Címke 3')">Címke3</div>
+                    <div class="cimke" style="background-color: blue;" @click="add_cimke('Címke 4')">Címke4</div> -->
+                </div>
+                <div class="cimkediv2" style="margin-bottom: 1rem;">
+                <div v-if="!showmodal" class="cimke" :style="{ 'background-color': apicimkek.cimkek.filter(item => item.id == cimkeid)[0].color, 'color' : get_contrast_by_id(cimkeid) }" v-for="cimkeid in filter_cimkek" style="cursor: default;">{{ apicimkek.cimkek.filter(item => item.id == cimkeid)[0].nev }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="gombok">
+            <button @click="closecimkemodal()" class="cancelbtn">Mégse</button><button class="savebtn" @click="update_show_todos()">Mentés</button>
+        </div>
+    </div>
+    </div>
     <div class="showmodal" @click="closeshowmodal()">
     
       <div class="showmodal-content">
@@ -104,8 +127,6 @@
 </template>
 
 <script>
-import { faDice } from '@fortawesome/free-solid-svg-icons';
-
   export default {
     name: "Todos",
     data() {
@@ -116,7 +137,10 @@ import { faDice } from '@fortawesome/free-solid-svg-icons';
         showmodal: false,
         show_todos: [],
         current_show: "all",
-        date: null
+        date: null,
+        filter_cimkek: [],
+        shownincstalalat: false,
+        searchinput: ''
       }
     },
     created() {
@@ -182,17 +206,28 @@ import { faDice } from '@fortawesome/free-solid-svg-icons';
         if (this.current_show == "soon") {
           this.show_todos.todos = this.todos.todos.slice().filter(item => this.kozelgofilter(item.date))
         }
+        if (this.current_show == "cimkek") {
+          this.show_todos.todos = this.todos.todos.slice().filter(item => item.cimkeid.length > 0 ? item.cimkeid.some(cimke => this.filter_cimkek.includes(cimke)) : false)
+          document.querySelector(".blurbg_cimke").style.display = "none"
+          document.querySelector("#cimke_tab").classList.add("selectedtab")
+          soon_tab.classList.remove("selectedtab");
+          all_tab.classList.remove("selectedtab");
+          done_tab.classList.remove("selectedtab");
+          active_tab.classList.remove("selectedtab");
+        }
       },
       selected_tab(tab) {
         let all_tab = document.querySelector("#all_tab");
         let active_tab = document.querySelector("#active_tab");
         let done_tab = document.querySelector("#done_tab");
         let soon_tab = document.querySelector("#soon_tab");
+        let cimke_tab = document.querySelector("#cimke_tab");
         if (tab=="all") {
           all_tab.classList.add("selectedtab");
           active_tab.classList.remove("selectedtab");
           done_tab.classList.remove("selectedtab");
           soon_tab.classList.remove("selectedtab");
+          cimke_tab.classList.remove("selectedtab");
           this.current_show = "all"
           this.update_show_todos()
         }
@@ -201,6 +236,7 @@ import { faDice } from '@fortawesome/free-solid-svg-icons';
           active_tab.classList.remove("selectedtab");
           all_tab.classList.remove("selectedtab");
           soon_tab.classList.remove("selectedtab");
+          cimke_tab.classList.remove("selectedtab");
           this.current_show = "done"
           this.update_show_todos()
         }
@@ -209,6 +245,7 @@ import { faDice } from '@fortawesome/free-solid-svg-icons';
           all_tab.classList.remove("selectedtab");
           done_tab.classList.remove("selectedtab");
           soon_tab.classList.remove("selectedtab");
+          cimke_tab.classList.remove("selectedtab");
           this.current_show = "active"
           this.update_show_todos()
         }
@@ -217,8 +254,13 @@ import { faDice } from '@fortawesome/free-solid-svg-icons';
           all_tab.classList.remove("selectedtab");
           done_tab.classList.remove("selectedtab");
           active_tab.classList.remove("selectedtab");
+          cimke_tab.classList.remove("selectedtab");
           this.current_show = "soon"
           this.update_show_todos()
+        }
+        if (tab == "cimke") {
+          this.current_show = "cimkek"
+          document.querySelector(".blurbg_cimke").style.display = "flex";
         }
       },
       delete_cimke(cimkeid) {
@@ -285,14 +327,22 @@ import { faDice } from '@fortawesome/free-solid-svg-icons';
           for (let i = 0; i < szovegek.length; i++) {
             szovegek[i].parentElement.parentElement.style.display = "";
           }
+          this.shownincstalalat = false;
           return;
         }
+        let talalatok = 0;
         szovegek = document.querySelectorAll("#todoszoveg");
         for (let i = 0; i < szovegek.length; i++) {
           if (szovegek[i].innerText.toUpperCase().indexOf(filter) > -1) {
+            talalatok++;
             szovegek[i].parentElement.parentElement.style.display = "";
           } else {
             szovegek[i].parentElement.parentElement.style.display = "none";
+          }
+          if (talalatok === 0) {
+            this.shownincstalalat = true;
+          } else {
+            this.shownincstalalat = false;
           }
         }
       },
@@ -301,6 +351,13 @@ import { faDice } from '@fortawesome/free-solid-svg-icons';
           this.cimkek.push(cimkenev);
         } else {
           this.cimkek.splice(this.cimkek.indexOf(cimkenev), 1);
+        }
+      },
+      add_filter_cimke(cimkenev) {
+        if (!this.filter_cimkek.includes(cimkenev)) {
+          this.filter_cimkek.push(cimkenev);
+        } else {
+          this.filter_cimkek.splice(this.filter_cimkek.indexOf(cimkenev), 1);
         }
       },
       showtodo(todoID) {
@@ -372,13 +429,18 @@ import { faDice } from '@fortawesome/free-solid-svg-icons';
           document.querySelector('.blurbg').style.display = 'none';
           this.cimkek = [];
           document.querySelector('#eleminput').value = '';
+          this.shownincstalalat = false
           document.querySelector('#megnevezesinput').value = '';
           document.querySelector('#szemelyinput').value = '';
+          document.querySelector('#helyszininput').value = '';
           document.querySelector('.savebtn').id = '';
           let szovegek = document.querySelectorAll("#todoszoveg");
           for (let i = 0; i < szovegek.length; i++) {
             szovegek[i].parentElement.parentElement.style.display = "";
           }
+      },
+      closecimkemodal() {
+          document.querySelector('.blurbg_cimke').style.display = 'none';
       },
       saveTodo() {
         let savebtn = document.querySelector('.savebtn');
@@ -404,8 +466,8 @@ import { faDice } from '@fortawesome/free-solid-svg-icons';
               this.update_show_todos()
               this.cimkek = [];
               document.querySelector('.blurbg').style.display = 'none';
-              document.querySelector('#eleminput').value = '';
-              document.querySelector('#eleminput').value = '';
+              document.getElementById("eleminput").value = '';
+              this.shownincstalalat = false
               document.querySelector('#megnevezesinput').value = '';
               document.querySelector('#szemelyinput').value = '';
               let szovegek = document.querySelectorAll("#todoszoveg");
@@ -438,6 +500,7 @@ import { faDice } from '@fortawesome/free-solid-svg-icons';
               document.querySelector('.blurbg').style.display = 'none';
               document.querySelector('.savebtn').id = '';
               document.querySelector('#eleminput').value = '';
+              this.shownincstalalat = false
               document.querySelector('#megnevezesinput').value = '';
               document.querySelector('#szemelyinput').value = '';
               let szovegek = document.querySelectorAll("#todoszoveg");

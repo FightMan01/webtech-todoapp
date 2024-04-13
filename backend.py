@@ -1,10 +1,15 @@
 import asyncio, asyncpg
 from quart import Quart, app, make_response, request
-import uuid, random, dotenv, os
+import uuid, random, dotenv, os, jwt
 
 dotenv.load_dotenv()
 
 app = Quart(__name__)
+
+jwtinfos = {
+    "secret": "8gj324a7%2sad4zWSymdsUfE6453erUkdsajGas4ejhgkhB@4tN3tXdYc!5wrsw-Fas32308a",
+    "algorithm": "HS256"
+}
 
 @app.before_serving
 async def create_pool():
@@ -22,6 +27,20 @@ async def before_request():
         resp.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
         resp.headers['Access-Control-Allow-Headers'] = 'Content-Type'
         return resp
+    if (request.path != "/login") and (request.path != "/register"):
+        try:
+            if not request.headers.get("Authorization"):
+                response = await make_response({ "status": "error", "error": "Bejelentkezés szükséges." })
+                response.headers['Access-Control-Allow-Origin'] = "*"
+                return response, 401
+            userid = jwt.decode(request.headers['Authorization'].replace('Bearer ', ''), jwtinfos["secret"], algorithms=[jwtinfos["algorithm"]])
+        except jwt.DecodeError:
+            response = await make_response({ "status": "error", "error": "Bejelentkezés szükséges." })
+            response.headers['Access-Control-Allow-Origin'] = "*"
+            return response, 401
+        except:
+            return await make_response({"status": "error", "error": "Ismeretlen hiba." }), 500
+
 
 @app.route('/login', methods=['POST'])
 async def login():

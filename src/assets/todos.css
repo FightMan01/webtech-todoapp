@@ -8,9 +8,7 @@ p::-webkit-scrollbar {
 td::-webkit-scrollbar {
     display: none;
 }
-.popuptartalom::-webkit-scrollbar {
-    display: none;
-}
+
 .cimkediv2 {
     border-radius: 5px;
     height: fit-content;
@@ -75,7 +73,7 @@ td::-webkit-scrollbar {
     border-radius: 15px;
     display: flex;
     flex-direction: column;
-    overflow:scroll;
+    overflow-x: auto;
     max-height: 100%;
 }
 table {
@@ -85,6 +83,11 @@ table {
     border-spacing: 0px 0.5rem;
     padding-bottom: 20px;
     max-width: 70%;
+}
+@media only screen and (max-width: 600px) {
+  table {
+    width: 100%;
+  }
 }
 .line {
     width: 100%;
@@ -153,12 +156,40 @@ table {
     animation-name: animateblur;
     animation-duration: 0.5s;
 }
+.blurbg_cimke{
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(57,53,53,0.4);
+    backdrop-filter: blur(5px);
+    display: none;
+    animation-name: animateblur;
+    animation-duration: 0.5s;
+}
 .addmodal {
     background-color: #585858;
     z-index: 1;
     border-radius: 15px;
     height: 80%;
     width: 60em;
+    top: 50%; right: 50%;
+    transform: translate(50%, -50%);
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    max-width: 80%;
+    align-items: center;
+    justify-content: center;
+}
+.addmodal_cimke {
+    background-color: #585858;
+    z-index: 1;
+    border-radius: 15px;
+    height: 40%;
+    width: 40em;
     top: 50%; right: 50%;
     transform: translate(50%, -50%);
     display: flex;
@@ -179,13 +210,28 @@ table {
     flex-direction: column;
     justify-content: center;
     position: relative;
-    overflow: scroll;
+    overflow-x: auto;
     max-width: 80%;
     align-self: center;
 }
-.modal::-webkit-scrollbar {
-    display: none;
+
+::-webkit-scrollbar {
+  width: 10px;
+  border: 0;
 }
+
+::-webkit-scrollbar-track {
+  background: rgb(78, 78, 78);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(65, 65, 65); 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(45, 45, 45); 
+}
+
 .logoutbtn {
     background-color: red;
     color: white;
@@ -345,12 +391,13 @@ body {
     cursor: pointer;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    width: fit-content;
+    width: 10em;
 }
 
 .tabok td.selectedtab {
     border: 2px solid white;
     border-bottom: none;
+    width: 10em;
 }
 
 .szurestab-empty {
@@ -360,34 +407,16 @@ body {
 .dp__theme_light {
     --dp-background-color: rgb(41,41,41);
     --dp-text-color: white;
-    --dp-hover-color: #f3f3f3;
-    --dp-hover-text-color: #212121;
-    --dp-hover-icon-color: #959595;
-    --dp-primary-color: #1976d2;
-    --dp-primary-disabled-color: #6bacea;
-    --dp-primary-text-color: #f8f5f5;
-    --dp-secondary-color: #c0c4cc;
     --dp-border-color: transparent;
-    --dp-menu-border-color: #ddd;
     --dp-border-color-hover: transparent;
-    --dp-disabled-color: #f6f6f6;
-    --dp-scroll-bar-background: #f3f3f3;
-    --dp-scroll-bar-color: #959595;
-    --dp-success-color: #76d275;
-    --dp-success-color-disabled: #a3d9b1;
-    --dp-icon-color: #959595;
-    --dp-danger-color: #ff6f60;
-    --dp-marker-color: #ff6f60;
-    --dp-tooltip-color: #fafafa;
-    --dp-disabled-color-text: #8e8e8e;
-    --dp-highlight-color: rgb(25 118 210 / 10%);
-    --dp-range-between-dates-background-color: var(--dp-hover-color, #f3f3f3);
-    --dp-range-between-dates-text-color: var(--dp-hover-text-color, #212121);
-    --dp-range-between-border-color: var(--dp-hover-color, #f3f3f3);
 }
 
 .oldaltartalom {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.taboktable::-webkit-scrollbar {
+  display: none;
 }
