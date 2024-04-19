@@ -20,7 +20,7 @@
             </div>
             <div style="padding-top: 1.5rem;align-self: center;">
                 <button class="loginbtn" @click="register()">Regisztráció</button>
-                <p style="padding-top: 3.5rem;">Van már fiókja? <a href="/webtech/">Jelentkezzen be!</a></p>
+                <p style="padding-top: 3.5rem;">Van már fiókja? <a href=".">Jelentkezzen be!</a></p>
             </div>
             <div class="regtext">
                 

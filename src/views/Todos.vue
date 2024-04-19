@@ -144,8 +144,8 @@
       }
     },
     created() {
-      if (!localStorage.getItem("userid")) {
-          this.$router.push("/");
+      if (localStorage.getItem("token") == null) {
+          return this.$router.push(".");
       }
       this.$watch(
         () => this.$route.params.id,
@@ -267,11 +267,11 @@
         fetch("https://api.fightman01bot.hu:5849/delete_cimke", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization" : localStorage.getItem("token")
             },
             body: JSON.stringify({
                 id: cimkeid,
-                userid: localStorage.getItem("userid")
             })
         })
         .then(response => response.json())
@@ -305,11 +305,11 @@
         fetch("https://api.fightman01bot.hu:5849/add_cimke", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Authorization" : localStorage.getItem("token")
             },
             body: JSON.stringify({
-                nev: document.getElementById("ujcimke").value,
-                userid: localStorage.getItem("userid")
+                nev: document.getElementById("ujcimke").value
             })
         })
         .then(response => response.json())
@@ -397,10 +397,11 @@
         this.date = null
       },
       fetchData() {
-        fetch("https://api.fightman01bot.hu:5849/get_todos?userid=" + localStorage.getItem("userid"), {
+        fetch("https://api.fightman01bot.hu:5849/get_todos", {
           method: "GET",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization" : localStorage.getItem("token")
           }
         })
           .then(response => response.json())
@@ -408,10 +409,11 @@
             this.todos = data;
             this.update_show_todos()
           });
-        fetch("https://api.fightman01bot.hu:5849/get_cimkek?userid=" + localStorage.getItem("userid"), {
+        fetch("https://api.fightman01bot.hu:5849/get_cimkek", {
           method: "GET",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization" : localStorage.getItem("token")
           }
         })
           .then(response => response.json())
@@ -448,14 +450,14 @@
           fetch("https://api.fightman01bot.hu:5849/add_todo", {
               method: "POST",
               headers: {
-                  "Content-Type": "application/json"
+                  "Content-Type": "application/json",
+                  "Authorization" : localStorage.getItem("token")
               },
               body: JSON.stringify({
                   szoveg: document.querySelector('#megnevezesinput').value,
                   cimkek: this.cimkek,
                   szemely: document.querySelector('#szemelyinput').value,
                   kesz: false,
-                  userid: localStorage.getItem("userid"),
                   date: this.datumforma(this.date),
                   helyszin: document.querySelector('#helyszininput').value,
               })
@@ -479,7 +481,8 @@
           fetch("https://api.fightman01bot.hu:5849/edit_todo", {
               method: "POST",
               headers: {
-                  "Content-Type": "application/json"
+                  "Content-Type": "application/json",
+                  "Authorization" : localStorage.getItem("token")
               },
               body: JSON.stringify({
                   id: savebtn.id,
@@ -487,7 +490,6 @@
                   cimkek: this.cimkek,
                   szemely: document.querySelector('#szemelyinput').value,
                   kesz: false,
-                  userid: localStorage.getItem("userid"),
                   date: this.datumforma(this.date),
                   helyszin: document.querySelector('#helyszininput').value,
               })
@@ -515,11 +517,11 @@
           fetch("https://api.fightman01bot.hu:5849/delete_todo", {
               method: "POST",
               headers: {
-                  "Content-Type": "application/json"
+                  "Content-Type": "application/json",
+                  "Authorization" : localStorage.getItem("token")
               },
               body: JSON.stringify({
                   id: todoID,
-                  userid: localStorage.getItem("userid")
               })
           })
           .then(response => response.json())
@@ -532,12 +534,12 @@
           fetch("https://api.fightman01bot.hu:5849/set_kesz", {
               method: "POST",
               headers: {
-                  "Content-Type": "application/json"
+                  "Content-Type": "application/json",
+                  "Authorization" : localStorage.getItem("token")
               },
               body: JSON.stringify({
                   id: todoID,
                   kesz: allapot,
-                  userid: localStorage.getItem("userid")
               })
           })
           .then(response => response.json())
@@ -547,8 +549,8 @@
           });
       },
       logout() {
-          localStorage.removeItem("userid");
-          this.$router.push("/");
+          localStorage.removeItem("token");
+          this.$router.push(".");
       },
       edit_item(todoID) {
         document.querySelector('.blurbg').style.display = 'flex';

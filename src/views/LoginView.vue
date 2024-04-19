@@ -8,15 +8,15 @@
         <h2 style="filter: drop-shadow(1px 1px 5px #000000);padding-top: 1rem;align-self: center;">Bejelentkezés</h2>
             <div style="padding-top: 1rem;align-self: center;width: 75%;">
                 <h3>Email cím</h3>
-                <div class="inputdiv"><input type="email" required id="emailinput"></input></div>
+                <div class="inputdiv"><input type="email" id="emailinput" @keydown.enter="login()" required></input></div>
             </div>
             <div style="padding-top: 1rem;align-self: center;width:75%;">
                 <h3>Jelszó</h3>
-                <div class="inputdiv"><input type="password" required id="pwinput"></input></div>
+                <div class="inputdiv"><input type="password" id="pwinput" @keydown.enter="login()" required></input></div>
             </div>
             <div style="padding-top: 1.5rem;align-self: center;">
                 <button class="loginbtn" @click="login()">Bejelentkezés</button>
-                <p style="padding-top: 3.5rem;">Nincs még fiókja? <a href="/webtech/register">Regisztráljon!</a></p>
+                <p style="padding-top: 3.5rem;">Nincs még fiókja? <a href="register">Regisztráljon!</a></p>
             </div>
             <div class="regtext">
                 
@@ -44,8 +44,7 @@ export default {
         }).then(response => {
             if (response.status == 200) {
                 response.json().then(data => {
-                    localStorage.setItem('userid', data.user.id);
-                    localStorage.setItem('email', email);
+                    localStorage.setItem('token', data.token);
                 });
                 setTimeout(() => {
                     this.$router.push('/todos');

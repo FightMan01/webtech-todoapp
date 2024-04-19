@@ -14,7 +14,6 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/vue-fontawesome": "^3.0.6",
-    "@vue/cli-plugin-pwa": "^5.0.8",
     "@vuepic/vue-datepicker": "^8.4.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
@@ -22,7 +21,6 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",
     "vite": "^5.1.6",
-    "vite-plugin-pwa": "^0.19.8",
     "vite-plugin-vue-devtools": "^7.0.18"
   }
 }
