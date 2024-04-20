@@ -2,18 +2,9 @@
 :root {
   --vt-c-white: #ffffff;
   --vt-c-black: #393535;
-}
-
-/* semantic color variables for this project */
-:root {
   --section-gap: 160px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--vt-c-black);
-    --color-text: var(--vt-c-white);
-  }
+  --color-background: var(--vt-c-black);
+  --color-text: var(--vt-c-white);
 }
 
 *,

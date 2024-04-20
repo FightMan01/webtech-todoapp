@@ -4,7 +4,7 @@ import Register from '../views/Register.vue'
 import Todos from '../views/Todos.vue'
 
 const router = createRouter({
-  history: createWebHistory('/webtech/'),
+  history: createWebHistory('/webtech-todoapp/'),
   routes: [
     {
       path: '/',
