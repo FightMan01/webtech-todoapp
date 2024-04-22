@@ -11,8 +11,6 @@ jwtinfos = {
     "algorithm": os.environ.get("JWT_ALGORITHM")
 }
 
-print(jwtinfos)
-
 @app.before_serving
 async def create_pool():
     app.pool = await asyncpg.create_pool(user=os.environ.get("DB_USER"), password=os.environ.get("DB_PASS"), database='webtech', host='localhost', port=os.environ.get("DB_PORT"))
@@ -69,12 +67,21 @@ async def login():
 @app.route('/register', methods=['POST'])
 async def register():
     data = await request.get_json()
-    await app.pool.execute('INSERT INTO users (username, password) VALUES ($1, $2)', data['username'], data['password'])
-    rows = await app.pool.fetch('SELECT * FROM users WHERE username = $1 AND password = $2', data['username'], data['password'])
-    jwt_data = dict(rows[0])
-    jwt_data["id"] = str(jwt_data["id"])
-    jwt_gen = generate_jwt(jwt_data)
-    res = await make_response({"token" : "Bearer " + jwt_gen})
+    rows = await app.pool.fetch('SELECT * FROM users WHERE username = $1', data['username'])
+    if len(rows) > 0:
+        res = await make_response({'error': 'A felhasználónév foglalt'}, 401)
+        res.headers['Access-Control-Allow-Origin'] = '*'
+        return res
+    await app.pool.execute('INSERT INTO users (username, password, name) VALUES ($1, $2, $3)', data['username'], data['password'], data['name'])
+    res = await make_response({"status" : "OK"})
+    res.headers['Access-Control-Allow-Origin'] = '*'
+    return res
+
+@app.route('/get_user')
+async def get_user():
+    userid = jwt_decode(request.headers['Authorization'].replace('Bearer ', ''))["user"]["id"]
+    rows = await app.pool.fetch('SELECT * FROM users WHERE id = $1', int(userid))
+    res = await make_response({'user': dict(rows[0])["name"]})
     res.headers['Access-Control-Allow-Origin'] = '*'
     return res
 

@@ -1,7 +1,8 @@
 <template >
   <main>
     <div class="nav">
-        <h2 style="margin: 5px;display: inline-block;">TODO app</h2><i class="fa-regular fa-circle-check fa-lg" style="display: inline-block;"></i>
+        <h2 style="margin: 4px;display: inline-block;">TODO app</h2><i class="fa-regular fa-circle-check fa-lg" style="display: inline-block;"></i>
+        <div class="udvuser">Üdv, {{ login_name }}!</div>
         <button class="logoutbtn" @click="logout()">Kijelentkezés</button>
         <div class="line"></div>
     </div>
@@ -140,7 +141,8 @@
         date: null,
         filter_cimkek: [],
         shownincstalalat: false,
-        searchinput: ''
+        searchinput: '',
+        login_name: '',
       }
     },
     created() {
@@ -419,6 +421,17 @@
           .then(response => response.json())
           .then(data => {
             this.apicimkek = data;
+          });
+        fetch("https://api.fightman01bot.hu:5849/get_user", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization" : localStorage.getItem("token")
+          }
+        })
+          .then(response => response.json())
+          .then(data => {
+            this.login_name = data.user;
           });
         },
       ujelem() {

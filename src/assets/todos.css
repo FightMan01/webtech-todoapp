@@ -84,11 +84,7 @@ table {
     padding-bottom: 20px;
     max-width: 70%;
 }
-@media only screen and (max-width: 600px) {
-  table {
-    width: 100%;
-  }
-}
+
 .line {
     width: 100%;
     height: 1px;
@@ -247,6 +243,19 @@ table {
     right: 0.2em;
     position: absolute;
 }
+
+.udvuser {
+    color: white;
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 24px;
+    position: absolute;
+    width: 89%;
+    margin-top: 4px;
+}
+
 .inputdiv {
     background-color: #2E2E2E;
     border-top-left-radius: 5px;
@@ -419,4 +428,15 @@ body {
 
 .taboktable::-webkit-scrollbar {
   display: none;
+}
+@media only screen and (max-width: 600px) {
+  table {
+    width: 100%;
+  }
+  .udvuser {
+      width: 35%;
+      font-size: 14px;
+      margin-top: 12px;
+      overflow-x: hidden;
+  }
 }

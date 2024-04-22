@@ -7,7 +7,7 @@
     <div class="modal">
         <h2 style="filter: drop-shadow(1px 1px 5px #000000);padding-top: 1rem;align-self: center;">Bejelentkezés</h2>
             <div style="padding-top: 1rem;align-self: center;width: 75%;">
-                <h3>Email cím</h3>
+                <h3>Felhasználónév</h3>
                 <div class="inputdiv"><input type="email" id="emailinput" @keydown.enter="login()" required></input></div>
             </div>
             <div style="padding-top: 1rem;align-self: center;width:75%;">
@@ -28,6 +28,11 @@
 <script>
 export default {
   name: 'Login',
+  created() {
+    if (localStorage.getItem("token")) {
+        return this.$router.push("/todos");
+    }
+  },
   methods: {
     login() {
         let email = document.getElementById('emailinput').value;

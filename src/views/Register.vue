@@ -11,7 +11,7 @@
                 <div class="inputdiv"><input id="nameinput"></input></div>
             </div>
             <div style="padding-top: 1rem;align-self: center;width: 75%;">
-                <h3>Email cím</h3>
+                <h3>Felhasználónév</h3>
                 <div class="inputdiv"><input type="email" required id="emailinput"></input></div>
             </div>
             <div style="padding-top: 1rem;align-self: center;width:75%;">
@@ -32,13 +32,6 @@
 <script>
 export default {
   name: 'Register',
-    data() {
-        return {
-            email: '',
-            password: '',
-            name: ''
-        }
-    },
     methods: {
         register() {
           let email = document.getElementById('emailinput').value
@@ -59,7 +52,10 @@ export default {
                 if (response.status === 200) {
                     this.$router.push('/')
                 } else {
-                    console.log('Sikertelen regisztráció!')
+                    response.json().then(data => {
+                        let error = data.error
+                        alert(`Sikertelen regisztráció: ${error}`)
+                    })
                 }
             })
         }
