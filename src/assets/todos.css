@@ -434,9 +434,6 @@ body {
     width: 100%;
   }
   .udvuser {
-      width: 35%;
-      font-size: 14px;
-      margin-top: 12px;
-      overflow-x: hidden;
+      display: none;
   }
 }

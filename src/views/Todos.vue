@@ -162,7 +162,7 @@
         }
         const datum = new Date();
         datum.setDate(datum.getDate() + 7);
-        return this.dateparser(date) <= datum
+        return this.dateparser(date) >= new Date() && this.dateparser(date) <= datum
       },
       dateparser(date) {
         let elemek = date.split(".");
@@ -348,18 +348,18 @@
           }
         }
       },
-      add_cimke(cimkenev) {
-        if (!this.cimkek.includes(cimkenev)) {
-          this.cimkek.push(cimkenev);
+      add_cimke(cimkeid) {
+        if (!this.cimkek.includes(cimkeid)) {
+          this.cimkek.push(cimkeid);
         } else {
-          this.cimkek.splice(this.cimkek.indexOf(cimkenev), 1);
+          this.cimkek.splice(this.cimkek.indexOf(cimkeid), 1);
         }
       },
-      add_filter_cimke(cimkenev) {
-        if (!this.filter_cimkek.includes(cimkenev)) {
-          this.filter_cimkek.push(cimkenev);
+      add_filter_cimke(cimkeid) {
+        if (!this.filter_cimkek.includes(cimkeid)) {
+          this.filter_cimkek.push(cimkeid);
         } else {
-          this.filter_cimkek.splice(this.filter_cimkek.indexOf(cimkenev), 1);
+          this.filter_cimkek.splice(this.filter_cimkek.indexOf(cimkeid), 1);
         }
       },
       showtodo(todoID) {

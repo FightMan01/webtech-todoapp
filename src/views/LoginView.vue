@@ -55,7 +55,7 @@ export default {
                     this.$router.push('/todos');
                 }, 500);
             } else {
-                alert('Hibás email cím vagy jelszó!');
+                alert('Hibás felhasználónév vagy jelszó!');
             }
         });
     }
