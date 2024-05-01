@@ -56,7 +56,7 @@
                         <!-- <div class="cimke" style="background-color: orange;" @click="add_cimke('Címke 2')">Címke2</div>
                         <div class="cimke" style="background-color: green;" @click="add_cimke('Címke 3')">Címke3</div>
                         <div class="cimke" style="background-color: blue;" @click="add_cimke('Címke 4')">Címke4</div> -->
-                        <div class="ujcimkeinput"><input id="ujcimke" placeholder="Új címke" @keydown.enter="save_cimke()"></input></div>
+                        <div class="cimke" style="background-color: #828282;cursor: default;width: 10em;"><input id="ujcimke" placeholder="Új címke" @keydown.enter="save_cimke()"></input></div>
                     </div>
                     <div class="cimkediv2">
                     <div v-if="!showmodal" class="cimke" :style="{ 'background-color': apicimkek.cimkek.filter(item => item.id == cimkeid)[0].color, 'color' : get_contrast_by_id(cimkeid) }" v-for="cimkeid in cimkek" style="cursor: default;">{{ apicimkek.cimkek.filter(item => item.id == cimkeid)[0].nev }}</div>
